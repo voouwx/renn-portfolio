@@ -1,0 +1,358 @@
+# .cursorrules — Renn Portfolio (Django + Render)
+# Versi: 3.0
+# Selalu baca file ini sebelum generate kode apapun.
+
+---
+
+## Project Identity
+
+- **Type:** Personal developer portfolio — web dinamis, publicly accessible
+- **Stack:** Django 5.x, Python 3.11+, PostgreSQL (Render managed DB), Render deployment
+- **Owner:** Renn (`voouwx` on GitHub) — Data Science student
+- **Niche:** AI Security × Edge AI/TinyML × MLOps
+- **Aesthetic:** Dark & Minimal — developer tone, monospace accents, subtle cyan glow
+- **AI Assistant:** Cursor (rencana migrasi ke local LLM via Continue.dev + Ollama)
+
+---
+
+## Core Philosophy
+
+1. **Fat Models, Thin Views** — logic bisnis ada di models/managers, bukan di views
+2. **DRY templates** — `{% extends %}` dan `{% include %}` wajib, zero HTML duplikasi
+3. **Django-native dulu** — sebelum install package baru, cek apakah Django sudah punya solusinya
+4. **Render-native** — tidak perlu adapter/workaround khusus, Django jalan sebagai web service biasa
+5. **Portfolio-worthy code** — clean, typed, documented, layak di-showcase di GitHub
+6. **Reproducible** — semua dependency di `requirements.txt`, secret di `.env`
+
+---
+
+## Tech Stack & Versions
+
+```
+Python          : 3.11+
+Django          : 5.x
+Database        : PostgreSQL via Render Managed Database
+Static files    : WhiteNoise (serve langsung dari Django, no CDN needed)
+CSS             : Vanilla CSS + CSS Variables (NO framework)
+JS              : Vanilla JS (real-time form validation, typewriter, minor interactions)
+Font            : JetBrains Mono (display/mono) + Inter (body)
+Forms           : Django Forms (server-side) + custom JS (client-side real-time validation)
+Env             : python-decouple
+Deploy          : Render Web Service (gunicorn sebagai WSGI server)
+```
+
+---
+
+## Project Structure
+
+```
+renn_portfolio/                  ← repo root
+├── .cursorrules                 ← file ini
+├── .env                         ← TIDAK di-commit
+├── .env.example                 ← template, WAJIB di-commit
+├── .gitignore
+├── requirements.txt
+├── render.yaml                  ← Render deployment config (Infrastructure as Code)
+├── build.sh                     ← build script untuk Render
+├── manage.py
+│
+├── config/                      ← Django project config
+│   ├── __init__.py
+│   ├── settings/
+│   │   ├── __init__.py
+│   │   ├── base.py              ← shared settings
+│   │   ├── local.py             ← DEBUG=True, SQLite
+│   │   └── production.py        ← DEBUG=False, Render PostgreSQL, WhiteNoise
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── apps/                        ← semua Django apps
+│   ├── portfolio/               ← Projects + Skills
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   ├── admin.py
+│   │   └── migrations/
+│   ├── blog/                    ← Blog posts
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   ├── admin.py
+│   │   └── migrations/
+│   └── contact/                 ← Contact form + notifikasi
+│       ├── forms.py
+│       ├── views.py
+│       ├── urls.py
+│       └── utils.py             ← email notification logic
+│
+├── templates/
+│   ├── base.html
+│   ├── components/              ← navbar.html, footer.html, card.html
+│   ├── portfolio/
+│   ├── blog/
+│   └── contact/
+│
+├── static/
+│   ├── css/
+│   │   ├── main.css             ← CSS variables + global styles
+│   │   └── components/
+│   ├── js/
+│   │   ├── typewriter.js
+│   │   └── form-validation.js
+│   └── fonts/
+│
+└── media/                       ← user uploads (project images, dll)
+    └── .gitkeep
+```
+
+---
+
+## Render Deployment Config
+
+```yaml
+# render.yaml — taruh di root repo
+services:
+  - type: web
+    name: renn-portfolio
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: renn-portfolio-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: renn-portfolio.onrender.com
+
+databases:
+  - name: renn-portfolio-db
+    databaseName: renn_portfolio
+    user: renn
+```
+
+```bash
+# build.sh
+#!/usr/bin/env bash
+set -o errexit
+pip install -r requirements.txt
+python manage.py collectstatic --noinput --settings=config.settings.production
+python manage.py migrate --settings=config.settings.production
+```
+
+### Render vs Vercel — kenapa lebih simple:
+- Tidak perlu `vercel-wsgi` adapter
+- PostgreSQL tersedia built-in via Render Managed Database
+- `gunicorn` jalan sebagai persistent web service (bukan serverless/cold start)
+- Static files: WhiteNoise tetap dipakai, tapi tanpa workaround routing khusus
+- Auto-deploy dari GitHub push ke `main` branch
+
+---
+
+## Django Coding Standards
+
+### Views
+```python
+# CBV untuk list/detail
+class ProjectListView(ListView):
+    model = Project
+    template_name = 'portfolio/project_list.html'
+    context_object_name = 'projects'
+    queryset = Project.objects.filter(published=True).select_related()
+
+# FBV untuk form handling
+def contact_view(request: HttpRequest) -> HttpResponse:
+    ...
+```
+
+### Models — Fat Model Pattern
+```python
+class Project(models.Model):
+    # fields...
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def get_absolute_url(self) -> str:
+        return reverse('portfolio:project_detail', kwargs={'slug': self.slug})
+
+    @property
+    def tech_list(self) -> list[str]:
+        """Return tech stack sebagai list dari comma-separated string."""
+        return [t.strip() for t in self.tech_stack.split(',')]
+
+    @classmethod
+    def get_featured(cls) -> 'QuerySet[Project]':
+        """Return featured projects untuk homepage."""
+        return cls.objects.filter(is_featured=True, published=True)
+```
+
+### Type Hints & Docstrings (WAJIB)
+```python
+def send_contact_email(
+    name: str,
+    email: str,
+    message: str,
+    phone: str | None = None
+) -> bool:
+    """
+    Kirim notifikasi kontak masuk via email.
+
+    Args:
+        name: Nama pengirim
+        email: Email pengirim
+        message: Isi pesan
+        phone: Nomor HP opsional
+
+    Returns:
+        True jika berhasil, False jika gagal
+    """
+    ...
+```
+
+### Naming Conventions
+- Functions & variables: `snake_case`
+- Classes: `PascalCase`
+- Constants: `UPPER_SNAKE_CASE`
+- URL names: `app_name:action` (e.g., `portfolio:project_list`)
+- Template files: `lowercase_with_underscore.html`
+
+### ORM — Performance
+```python
+# BENAR
+projects = Project.objects.select_related('author').prefetch_related('tags').filter(published=True)
+
+# SALAH — N+1 query
+for project in Project.objects.all():
+    print(project.author.name)  # query baru tiap iterasi
+```
+
+---
+
+## Contact Form — Spec Lengkap
+
+### Fields
+```python
+class ContactForm(forms.Form):
+    name    = forms.CharField(max_length=100)
+    email   = forms.EmailField()
+    phone   = forms.CharField(max_length=20, required=False)
+    subject = forms.CharField(max_length=200)
+    message = forms.CharField(widget=forms.Textarea)
+```
+
+### Validasi Dua Layer (WAJIB)
+
+**Client-side (real-time JS):**
+- Validasi saat user mengetik (`input` event)
+- Visual feedback: border merah (error) / hijau (valid) per field
+- Pesan error spesifik di bawah field
+- Phone: validasi format Indonesia (08xx / +62xx)
+- Disable tombol Submit jika ada error
+
+**Server-side (Django Forms):**
+- `clean_email()` — format valid
+- `clean_phone()` — sanitize + validasi format Indonesia
+- `clean_message()` — minimal 20 karakter
+- `{% csrf_token %}` wajib
+
+### Notifikasi
+- Email via Django `send_mail` + SMTP Gmail
+- WhatsApp via Twilio (Phase 2, opsional)
+- Success: konfirmasi animated + form reset
+- Error: pesan spesifik per field
+
+---
+
+## CSS Design System
+
+```css
+:root {
+  --bg-primary:    #0a0a0a;
+  --bg-secondary:  #111111;
+  --bg-card:       #161616;
+  --text-primary:  #e8e8e8;
+  --text-secondary:#888888;
+  --text-muted:    #444444;
+  --accent:        #00e5ff;
+  --accent-dim:    #00e5ff18;
+  --border:        #1e1e1e;
+  --border-hover:  #333333;
+  --error:         #ff4d4d;
+  --success:       #00c896;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --space-1: 0.25rem;  --space-2: 0.5rem;
+  --space-3: 0.75rem;  --space-4: 1rem;
+  --space-6: 1.5rem;   --space-8: 2rem;
+  --space-12: 3rem;    --space-16: 4rem;
+  --space-24: 6rem;    --space-32: 8rem;
+
+  --transition-fast:   150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow:   600ms ease;
+}
+```
+
+- Mobile-first, breakpoint: 768px dan 1024px
+- `@media (prefers-reduced-motion: reduce)` wajib diimplementasikan
+
+---
+
+## Security Checklist (Production)
+
+```python
+# config/settings/production.py
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+```
+
+---
+
+## Git Conventions
+
+```
+feat: add contact form with real-time validation
+fix: correct static files path
+style: update hero typewriter timing
+refactor: split settings into base/local/production
+docs: add setup instructions to README
+test: add unit tests for ContactForm validation
+chore: update requirements.txt
+```
+
+Branch: `main` (prod) ← `develop` ← `feature/nama-fitur`
+
+---
+
+## What Cursor MUST NOT Do
+
+- Install CSS framework tanpa konfirmasi
+- Install JS framework tanpa konfirmasi
+- Taruh business logic di templates
+- Hardcode environment variables
+- Skip migration setelah ubah models
+- Commit `db.sqlite3`, `.env`, atau `media/`
+
+---
+
+## Pre-Commit Checklist
+
+- [ ] `python manage.py check --deploy` lulus
+- [ ] Semua form punya `{% csrf_token %}`
+- [ ] Tidak ada secret di kode
+- [ ] Migration sudah dibuat
+- [ ] Static files pakai `{% static %}`
+- [ ] Type hints ada di semua fungsi baru

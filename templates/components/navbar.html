@@ -1,0 +1,10 @@
+<header class="navbar">
+    <div class="navbar__inner">
+        <a href="{% url 'portfolio:home' %}" class="navbar__brand">renn_</a>
+        <nav class="navbar__nav" aria-label="Main navigation">
+            <a href="{% url 'portfolio:project_list' %}" class="navbar__link">Projects</a>
+            <a href="{% url 'blog:post_list' %}" class="navbar__link">Blog</a>
+            <a href="{% url 'contact:contact' %}" class="navbar__link">Contact</a>
+        </nav>
+    </div>
+</header>
