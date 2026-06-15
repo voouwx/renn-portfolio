@@ -2,7 +2,7 @@
 Production settings — PostgreSQL via DATABASE_URL, Railway deployment, security hardening.
 """
 
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from decouple import Csv, config
 
@@ -11,7 +11,11 @@ from .base import *  # noqa: F403
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 database_url = config('DATABASE_URL')
+if database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
 parsed = urlparse(database_url)
+query_params = parse_qs(parsed.query)
 
 DATABASES = {
     'default': {
@@ -21,8 +25,14 @@ DATABASES = {
         'PASSWORD': parsed.password,
         'HOST': parsed.hostname,
         'PORT': parsed.port or 5432,
+        'OPTIONS': {
+            'sslmode': query_params.get('sslmode', ['require'])[0],
+        },
     }
 }
+
+# Manifest storage raises 500 if collectstatic missed a file — too fragile for PaaS deploy
+STORAGES['staticfiles']['BACKEND'] = 'whitenoise.storage.CompressedStaticFilesStorage'  # noqa: F405
 
 # Railway injects RAILWAY_PUBLIC_DOMAIN when public networking is enabled
 ALLOWED_HOSTS = list(ALLOWED_HOSTS)
@@ -45,3 +55,20 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
