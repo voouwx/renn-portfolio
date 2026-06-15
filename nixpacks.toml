@@ -1,4 +1,7 @@
-# Nixpacks auto-runs collectstatic saat build — butuh SECRET_KEY dll.
-# Kita handle collectstatic di Procfile release phase (saat env vars sudah ada).
+# Nixpacks auto-runs collectstatic/migrate saat build — env vars belum ada.
+# migrate + collectstatic dipindah ke start.sh (jalan saat container start).
 [variables]
 DISABLE_COLLECTSTATIC = "1"
+
+[phases.build]
+cmds = []
