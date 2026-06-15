@@ -1,0 +1,4 @@
+# Nixpacks auto-runs collectstatic saat build — butuh SECRET_KEY dll.
+# Kita handle collectstatic di Procfile release phase (saat env vars sudah ada).
+[variables]
+DISABLE_COLLECTSTATIC = "1"

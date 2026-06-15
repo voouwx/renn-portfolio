@@ -1,6 +1,5 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "./build.sh"
 
 [deploy]
 restartPolicyType = "ON_FAILURE"
