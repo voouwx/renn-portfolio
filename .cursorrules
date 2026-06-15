@@ -1,4 +1,4 @@
-# .cursorrules — Renn Portfolio (Django + Render)
+# .cursorrules — Renn Portfolio (Django + Railway)
 # Versi: 3.0
 # Selalu baca file ini sebelum generate kode apapun.
 
@@ -7,7 +7,7 @@
 ## Project Identity
 
 - **Type:** Personal developer portfolio — web dinamis, publicly accessible
-- **Stack:** Django 5.x, Python 3.11+, PostgreSQL (Render managed DB), Render deployment
+- **Stack:** Django 5.x, Python 3.11+, PostgreSQL (Railway plugin), Railway deployment
 - **Owner:** Renn (`voouwx` on GitHub) — Data Science student
 - **Niche:** AI Security × Edge AI/TinyML × MLOps
 - **Aesthetic:** Dark & Minimal — developer tone, monospace accents, subtle cyan glow
@@ -20,7 +20,7 @@
 1. **Fat Models, Thin Views** — logic bisnis ada di models/managers, bukan di views
 2. **DRY templates** — `{% extends %}` dan `{% include %}` wajib, zero HTML duplikasi
 3. **Django-native dulu** — sebelum install package baru, cek apakah Django sudah punya solusinya
-4. **Render-native** — tidak perlu adapter/workaround khusus, Django jalan sebagai web service biasa
+4. **Railway-native** — tidak perlu adapter/workaround khusus, Django jalan sebagai web service biasa
 5. **Portfolio-worthy code** — clean, typed, documented, layak di-showcase di GitHub
 6. **Reproducible** — semua dependency di `requirements.txt`, secret di `.env`
 
@@ -31,14 +31,14 @@
 ```
 Python          : 3.11+
 Django          : 5.x
-Database        : PostgreSQL via Render Managed Database
+Database        : PostgreSQL via Railway PostgreSQL plugin
 Static files    : WhiteNoise (serve langsung dari Django, no CDN needed)
 CSS             : Vanilla CSS + CSS Variables (NO framework)
 JS              : Vanilla JS (real-time form validation, typewriter, minor interactions)
 Font            : JetBrains Mono (display/mono) + Inter (body)
 Forms           : Django Forms (server-side) + custom JS (client-side real-time validation)
 Env             : python-decouple
-Deploy          : Render Web Service (gunicorn sebagai WSGI server)
+Deploy          : Railway Web Service (gunicorn + Procfile, PORT dari Railway)
 ```
 
 ---
@@ -52,8 +52,9 @@ renn_portfolio/                  ← repo root
 ├── .env.example                 ← template, WAJIB di-commit
 ├── .gitignore
 ├── requirements.txt
-├── render.yaml                  ← Render deployment config (Infrastructure as Code)
-├── build.sh                     ← build script untuk Render
+├── railway.toml                 ← Railway deployment config (Infrastructure as Code)
+├── Procfile                     ← release (migrate + collectstatic) + web (gunicorn)
+├── build.sh                     ← build script untuk Railway (pip install)
 ├── manage.py
 │
 ├── config/                      ← Django project config
@@ -62,7 +63,7 @@ renn_portfolio/                  ← repo root
 │   │   ├── __init__.py
 │   │   ├── base.py              ← shared settings
 │   │   ├── local.py             ← DEBUG=True, SQLite
-│   │   └── production.py        ← DEBUG=False, Render PostgreSQL, WhiteNoise
+│   │   └── production.py        ← DEBUG=False, Railway PostgreSQL, WhiteNoise
 │   ├── urls.py
 │   └── wsgi.py
 │
@@ -107,34 +108,23 @@ renn_portfolio/                  ← repo root
 
 ---
 
-## Render Deployment Config
+## Railway Deployment Config
 
-```yaml
-# render.yaml — taruh di root repo
-services:
-  - type: web
-    name: renn-portfolio
-    runtime: python
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application"
-    envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.production
-      - key: SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: false
-      - key: DATABASE_URL
-        fromDatabase:
-          name: renn-portfolio-db
-          property: connectionString
-      - key: ALLOWED_HOSTS
-        value: renn-portfolio.onrender.com
+```toml
+# railway.toml — taruh di root repo
+[build]
+builder = "NIXPACKS"
+buildCommand = "./build.sh"
 
-databases:
-  - name: renn-portfolio-db
-    databaseName: renn_portfolio
-    user: renn
+[deploy]
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+```
+
+```procfile
+# Procfile
+release: python manage.py migrate --noinput --settings=config.settings.production && python manage.py collectstatic --noinput --settings=config.settings.production
+web: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
 ```bash
@@ -142,16 +132,24 @@ databases:
 #!/usr/bin/env bash
 set -o errexit
 pip install -r requirements.txt
-python manage.py collectstatic --noinput --settings=config.settings.production
-python manage.py migrate --settings=config.settings.production
 ```
 
-### Render vs Vercel — kenapa lebih simple:
-- Tidak perlu `vercel-wsgi` adapter
-- PostgreSQL tersedia built-in via Render Managed Database
-- `gunicorn` jalan sebagai persistent web service (bukan serverless/cold start)
-- Static files: WhiteNoise tetap dipakai, tapi tanpa workaround routing khusus
-- Auto-deploy dari GitHub push ke `main` branch
+### Environment Variables (Railway dashboard → Variables)
+```
+DJANGO_SETTINGS_MODULE=config.settings.production
+SECRET_KEY=<generate dengan python -c "import secrets; print(secrets.token_hex(32))">
+DEBUG=false
+ALLOWED_HOSTS=<your-app>.up.railway.app
+DATABASE_URL=<otomatis dari PostgreSQL plugin>
+RAILWAY_PUBLIC_DOMAIN=<otomatis dari Railway>
+```
+
+### Kenapa Railway untuk Django:
+- Tidak perlu adapter khusus — gunicorn + Procfile standar
+- PostgreSQL tersedia via plugin (DATABASE_URL otomatis)
+- `RAILWAY_PUBLIC_DOMAIN` di-inject otomatis untuk ALLOWED_HOSTS + CSRF
+- Auto-deploy dari GitHub push ke branch `main`
+- Free tier: $5 credit/bulan (cukup untuk portfolio kecil)
 
 ---
 

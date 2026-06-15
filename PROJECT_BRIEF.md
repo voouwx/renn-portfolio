@@ -14,7 +14,7 @@
 | **Type** | Personal developer portfolio — web dinamis, publicly accessible |
 | **Goal** | Komunikasikan identity: Data Science × AI Security × Edge AI/TinyML × MLOps |
 | **Target audience** | Recruiter, fellow developer, kolaborator, komunitas tech |
-| **Stack** | Django 5.x + PostgreSQL (Render) + Render Web Service |
+| **Stack** | Django 5.x + PostgreSQL (Railway) + Railway Web Service |
 | **Status** | 🟡 Planning → Phase 0 |
 
 ---
@@ -27,29 +27,29 @@ Background elektronika industri (SMK) + Data Science = perspektif hardware-to-so
 
 ---
 
-## Deployment: Render
+## Deployment: Railway
 
-### Kenapa Render (bukan Vercel)?
-| Aspek | Render | Vercel |
+### Kenapa Railway (bukan Vercel/Render)?
+| Aspek | Railway | Render |
 |---|---|---|
-| Django support | ✅ Native — persistent web service | ⚠️ Serverless, perlu adapter |
-| PostgreSQL | ✅ Built-in Managed DB | ❌ Harus pakai external (Supabase) |
-| Cold start | ✅ Tidak ada (persistent) | ⚠️ Ada (serverless) |
-| Static files | ✅ WhiteNoise langsung jalan | ⚠️ Perlu routing workaround |
-| Setup effort | ✅ Low — `render.yaml` cukup | ⚠️ Medium — banyak config |
-| Free tier | ✅ Ada (sleep after 15min idle) | ✅ Ada |
-| Migrate ke paid | Smooth | Smooth |
+| Django support | ✅ Native — persistent web service | ✅ Native |
+| PostgreSQL | ✅ Plugin (DATABASE_URL otomatis) | ✅ Managed DB |
+| Cold start | ✅ Tidak ada (persistent) | ⚠️ Free tier sleep after 15min |
+| Static files | ✅ WhiteNoise langsung jalan | ✅ WhiteNoise |
+| Setup effort | ✅ Low — Procfile + railway.toml | ✅ Low — render.yaml |
+| Free tier | ✅ $5 credit/bulan | ✅ Ada (dengan sleep) |
 
-**Catatan free tier Render:** Web service akan sleep setelah 15 menit tidak ada request. Request pertama setelah sleep akan lambat ~30 detik (spin up). Ini acceptable untuk portfolio — bisa di-upgrade ke paid ($7/bulan) kapan saja kalau sudah punya traffic atau butuh always-on.
+**Catatan free tier Railway:** Railway memberikan $5 credit gratis per bulan. Portfolio Django kecil biasanya cukup — monitor usage di dashboard. Tidak ada sleep seperti Render free tier.
 
-### Render Setup Flow
+### Railway Setup Flow
 ```
-1. Push repo ke GitHub
-2. Buat Web Service di render.com → connect GitHub repo
-3. Buat PostgreSQL database di render.com
-4. Set environment variables di Render dashboard
-5. render.yaml akan handle build + migrate + collectstatic otomatis
-6. Auto-deploy setiap push ke branch main
+1. Push repo ke GitHub (dengan railway.toml + Procfile)
+2. Buat project baru di railway.app → Deploy from GitHub repo
+3. Tambah PostgreSQL plugin ke project
+4. Set environment variables di Railway dashboard
+5. Generate public domain → Railway inject RAILWAY_PUBLIC_DOMAIN
+6. Procfile release phase handle migrate + collectstatic otomatis
+7. Auto-deploy setiap push ke branch main
 ```
 
 ---
@@ -204,10 +204,11 @@ EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 CONTACT_RECIPIENT_EMAIL=
 
-# Production (set di Render dashboard, bukan di file ini)
-# DATABASE_URL=postgresql://...  → otomatis dari Render Managed DB
+# Production (set di Railway dashboard → Variables, bukan di file ini)
+# DATABASE_URL=postgresql://...  → otomatis dari Railway PostgreSQL plugin
 # DJANGO_SETTINGS_MODULE=config.settings.production
 # DEBUG=False
+# RAILWAY_PUBLIC_DOMAIN=...      → otomatis dari Railway
 ```
 
 ---
@@ -219,9 +220,9 @@ CONTACT_RECIPIENT_EMAIL=
 - [ ] Struktur `apps/` dan `config/settings/`
 - [ ] `requirements.txt` (django, gunicorn, psycopg2-binary, whitenoise, python-decouple, Pillow)
 - [ ] `.env`, `.env.example`, `.gitignore`
-- [ ] `render.yaml` + `build.sh`
+- [ ] `railway.toml` + `Procfile` + `build.sh`
 - [ ] Init git + push ke GitHub
-- [ ] Connect ke Render, test deploy pertama (empty Django)
+- [ ] Connect ke Railway, test deploy pertama (empty Django)
 
 ### Phase 1 — Foundation (2-3 hari)
 - [ ] Models: `Skill`, `Project`, `BlogPost`
@@ -239,8 +240,8 @@ CONTACT_RECIPIENT_EMAIL=
 
 ### Phase 3 — Polish & Deploy (2 hari)
 - [ ] Responsive check (375px / 768px / 1280px)
-- [ ] Render PostgreSQL connection
-- [ ] Environment variables di Render dashboard
+- [ ] Railway PostgreSQL connection
+- [ ] Environment variables di Railway dashboard
 - [ ] Final deploy + smoke test
 
 ### Phase 4 — Post-Launch (opsional)
@@ -263,11 +264,11 @@ CONTACT_RECIPIENT_EMAIL=
 
 | Keputusan | Alasan |
 |---|---|
-| Deploy ke Render | Django-native, PostgreSQL built-in, no adapter needed, simpler setup |
+| Deploy ke Railway | Django-native, PostgreSQL plugin, no sleep on free tier, $5 credit/bulan |
 | Cursor sebagai AI assistant | Zero friction, free tier cukup |
 | Vanilla CSS | Belajar CSS proper, kontrol penuh design system |
 | Cyan `#00e5ff` sebagai accent | "Technical precision" feel, align dengan AI/tech identity |
 | `apps/` subfolder | Lebih organized, mudah scale |
 | Phone field opsional | Tidak semua orang nyaman share nomor HP |
 | Markdown untuk blog | Portable, tidak lock-in ke rich text editor |
-| `gunicorn` sebagai WSGI | Standard untuk Django production di Render |
+| `gunicorn` sebagai WSGI | Standard untuk Django production di Railway (bind ke $PORT) |
