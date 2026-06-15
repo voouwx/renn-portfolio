@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
 
-{% block title %}renn_ — Project{% endblock %}
+{% block title %}renn_ — {{ project.title }}{% endblock %}
 
 {% block content %}
 <section class="page-section">
-    <h1>Project</h1>
+    <a href="{% url 'portfolio:project_list' %}" class="back-link">&larr; Back to projects</a>
+
+    <h1 class="project-detail__title">{{ project.title }}</h1>
+
+    {% if project.tech_list %}
+    <div class="project-detail__tech">
+        {% for tech in project.tech_list %}
+        <span class="skill-chip">{{ tech }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="project-detail__description">
+        {{ project.description|linebreaks }}
+    </div>
+
+    <div class="project-detail__actions">
+        {% if project.github_url %}
+        <a href="{{ project.github_url }}" class="btn btn--secondary" target="_blank" rel="noopener noreferrer">GitHub</a>
+        {% endif %}
+        {% if project.live_url %}
+        <a href="{{ project.live_url }}" class="btn btn--primary" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        {% endif %}
+    </div>
 </section>
 {% endblock %}

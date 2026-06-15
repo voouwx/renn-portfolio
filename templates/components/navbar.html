@@ -1,10 +1,14 @@
 <header class="navbar">
     <div class="navbar__inner">
-        <a href="{% url 'portfolio:home' %}" class="navbar__brand">renn_</a>
-        <nav class="navbar__nav" aria-label="Main navigation">
-            <a href="{% url 'portfolio:project_list' %}" class="navbar__link">Projects</a>
-            <a href="{% url 'blog:post_list' %}" class="navbar__link">Blog</a>
-            <a href="{% url 'contact:contact' %}" class="navbar__link">Contact</a>
+        <a href="{% url 'portfolio:home' %}" class="nav-logo">&lt; Dev /&gt;</a>
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="{% url 'portfolio:home' %}#hero" class="nav-link" data-section="hero">Home</a>
+            <a href="{% url 'portfolio:home' %}#about" class="nav-link" data-section="about">About</a>
+            <a href="{% url 'portfolio:home' %}#skills" class="nav-link" data-section="skills">Skills</a>
+            <a href="{% url 'portfolio:home' %}#experience" class="nav-link" data-section="experience">Experience</a>
+            <a href="{% url 'portfolio:home' %}#projects" class="nav-link" data-section="projects">Projects</a>
+            <a href="{% url 'portfolio:home' %}#blog" class="nav-link" data-section="blog">Blog</a>
+            <a href="{% url 'portfolio:home' %}#contact" class="nav-link" data-section="contact">Contact</a>
         </nav>
     </div>
 </header>

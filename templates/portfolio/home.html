@@ -1,9 +1,391 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}renn_ — Home{% endblock %}
 
 {% block content %}
-<section class="page-section">
-    <h1>Home</h1>
+<section id="hero" class="hero-section">
+  <div class="hero-content">
+    <div class="hero-left">
+      <h1 class="hero-title">
+        <span class="code-keyword">const</span>
+        <span class="code-equals"> = </span>
+        <span class="code-value gradient-text">Developer</span>
+        <span class="code-semicolon"> ;</span>
+      </h1>
+      <p class="hero-subtitle">
+        <span class="code-comment">// </span>
+        <span class="hero-role-text"></span>
+        <span class="role-cursor">|</span>
+      </p>
+      <p class="hero-desc">
+        Background elektronika industri yang pivot ke Data Science —
+        nyaman dari microcontroller ESP32 sampai ML pipeline production.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn-primary">
+          Get In Touch <span>→</span>
+        </a>
+        <a href="#projects" class="btn-secondary">
+          View Projects <span class="code-tag">&lt;/&gt;</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="orbit-container">
+        <div class="orbit-ring"></div>
+        <div class="orbit-center">
+          <span class="orbit-center-icon">&lt;/&gt;</span>
+        </div>
+        <div class="tech-card tech-card--apex">
+          <span class="tech-card-icon">🔥</span>
+          <div>
+            <p class="tech-card-name">PyTorch</p>
+            <p class="tech-card-sub">Deep Learning</p>
+          </div>
+        </div>
+        <div class="tech-card tech-card--bl">
+          <span class="tech-card-icon">🐍</span>
+          <div>
+            <p class="tech-card-name">Python</p>
+            <p class="tech-card-sub">scikit-learn, pandas</p>
+          </div>
+        </div>
+        <div class="tech-card tech-card--br">
+          <span class="tech-card-icon">🐧</span>
+          <div>
+            <p class="tech-card-name">Linux</p>
+            <p class="tech-card-sub">Pop!_OS, Terminal</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<section id="about" class="about-section fade-in">
+  <div class="section-container">
+
+    <div class="section-heading">
+      <span class="section-number">01</span>
+      <h2><span class="code-tag">&lt;</span>
+          About Me
+          <span class="code-tag">/&gt;</span>
+      </h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-left">
+        <p class="about-bio">
+          Background di elektronika industri dari SMK — nyaman dengan
+          circuit boards, microcontroller, dan sistem embedded sebelum
+          pivot ke Data Science.
+        </p>
+        <p class="about-bio">
+          Sekarang fokus di persimpangan AI Security, Edge AI/TinyML,
+          dan MLOps — dari ESP32 sampai production ML pipeline.
+        </p>
+        <a href="https://github.com/voouwx"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="github-link">
+          github.com/voouwx
+        </a>
+
+        <div class="about-stats">
+          <div class="stat-card">
+            <span class="stat-number">3+</span>
+            <span class="stat-label">Projects</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">2</span>
+            <span class="stat-label">Years Learning</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Tech Domains</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-right">
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot green"></span>
+            <span class="code-block-filename">developer.py</span>
+          </div>
+          <pre class="code-block-body"><code><span class="cb-keyword">const</span> <span class="cb-var">developer</span> = {
+  <span class="cb-key">name</span>     : <span class="cb-str">'Renn'</span>,
+  <span class="cb-key">education</span>: <span class="cb-str">'Data Science'</span>,
+  <span class="cb-key">passion</span>  : [
+    <span class="cb-str">'Data Science'</span>,
+    <span class="cb-str">'TinyML'</span>,
+    <span class="cb-str">'Cybersecurity'</span>,
+  ],
+  <span class="cb-key">focus</span>    : <span class="cb-str">'Hardware meets AI'</span>
+} <span class="cb-comment">;</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills" class="skills-section">
+  <div class="section-container">
+    <div class="section-heading">
+      <span class="section-number">02</span>
+      <h2><span class="code-tag">&lt;</span>Skills<span class="code-tag">/&gt;</span></h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="skills-grid">
+      {% for category, skill_list in skills_grouped.items %}
+      <div class="skill-category-card fade-in">
+        <h3 class="skill-category-title">{{ category }}</h3>
+        {% for skill in skill_list %}
+        <div class="skill-item">
+          <div class="skill-item-header">
+            <span class="skill-name">{{ skill.name }}</span>
+            <span class="skill-percent">{{ skill.proficiency }}%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill"
+                 data-width="{{ skill.proficiency }}"
+                 style="width: 0%">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% empty %}
+      <p class="empty-state">No skills yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="experience-section">
+  <div class="section-container">
+    <div class="section-heading">
+      <span class="section-number">03</span>
+      <h2><span class="code-tag">&lt;</span>Experience<span class="code-tag">/&gt;</span></h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="timeline">
+      {% for exp in experiences %}
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot {% if exp.is_current %}active{% endif %}"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <span class="timeline-period">{{ exp.period }}</span>
+            {% if exp.is_current %}
+            <span class="timeline-badge">Current</span>
+            {% endif %}
+          </div>
+          <h3 class="timeline-role">{{ exp.role }}</h3>
+          <p class="timeline-company">{{ exp.company }}</p>
+          <p class="timeline-desc">{{ exp.description }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="empty-state">No experience yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="projects-section">
+  <div class="section-container">
+    <div class="section-heading">
+      <span class="section-number">04</span>
+      <h2><span class="code-tag">&lt;</span>Projects<span class="code-tag">/&gt;</span></h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="projects-grid">
+      {% for project in projects %}
+      <div class="project-card fade-in">
+        <div class="project-card-header">
+          <span class="project-icon">&lt;/&gt;</span>
+          <div class="project-links">
+            {% if project.github_url %}
+            <a href="{{ project.github_url }}"
+               target="_blank" rel="noopener"
+               class="project-link">GitHub</a>
+            {% endif %}
+            {% if project.live_url %}
+            <a href="{{ project.live_url }}"
+               target="_blank" rel="noopener"
+               class="project-link accent">Live</a>
+            {% endif %}
+          </div>
+        </div>
+        <h3 class="project-title">{{ project.title }}</h3>
+        <p class="project-desc">
+          {{ project.description|truncatechars:120 }}
+        </p>
+        <div class="project-tech">
+          {% for tech in project.tech_list %}
+          <span class="tech-chip">{{ tech }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% empty %}
+      <p class="empty-state">No projects yet.</p>
+      {% endfor %}
+    </div>
+
+    <div class="section-footer">
+      <a href="/projects/" class="btn-secondary">
+        View All Projects <span class="code-tag">&lt;/&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="blog" class="blog-section">
+  <div class="section-container">
+    <div class="section-heading">
+      <span class="section-number">05</span>
+      <h2><span class="code-tag">&lt;</span>Blog<span class="code-tag">/&gt;</span></h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="blog-list">
+      {% for post in blog_posts %}
+      <a href="{% url 'blog:post_detail' post.slug %}"
+         class="blog-item fade-in">
+        <div class="blog-item-meta">
+          <span class="blog-date">{{ post.created_at|date:"M d, Y" }}</span>
+          <span class="blog-read">{{ post.reading_time }} min read</span>
+        </div>
+        <h3 class="blog-title">{{ post.title }}</h3>
+        <p class="blog-excerpt">{{ post.excerpt }}</p>
+      </a>
+      {% empty %}
+      <p class="empty-state">No posts yet.</p>
+      {% endfor %}
+    </div>
+
+    <div class="section-footer">
+      <a href="/blog/" class="btn-secondary">
+        View All Posts <span class="code-tag">&lt;/&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="section-container">
+    <div class="section-heading">
+      <span class="section-number">06</span>
+      <h2><span class="code-tag">&lt;</span>Contact<span class="code-tag">/&gt;</span></h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="contact-desc">
+          Tertarik untuk berkolaborasi atau sekadar diskusi?
+          Kirim pesan — aku akan balas sesegera mungkin.
+        </p>
+        <div class="contact-info">
+          <a href="https://github.com/voouwx"
+             target="_blank" rel="noopener"
+             class="contact-info-item">
+            <span class="contact-info-label">GitHub</span>
+            <span class="contact-info-value">voouwx</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        {% if request.GET.sent %}
+        <div class="success-message">
+          ✓ Pesan terkirim! Aku akan segera membalasnya.
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/#contact" id="contact-form"
+              novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="contact_submit" value="1">
+
+          <div class="form-group">
+            <label class="form-label" for="id_name">Name</label>
+            <input type="text" name="name" id="id_name"
+                   class="form-input"
+                   value="{{ contact_form.name.value|default:'' }}"
+                   placeholder="Nama kamu">
+            <span class="form-error" id="error-name">
+              {{ contact_form.name.errors.0 }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_email">Email</label>
+            <input type="email" name="email" id="id_email"
+                   class="form-input"
+                   value="{{ contact_form.email.value|default:'' }}"
+                   placeholder="email@kamu.com">
+            <span class="form-error" id="error-email">
+              {{ contact_form.email.errors.0 }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_phone">
+              Phone <span class="form-optional">(optional)</span>
+            </label>
+            <input type="text" name="phone" id="id_phone"
+                   class="form-input"
+                   value="{{ contact_form.phone.value|default:'' }}"
+                   placeholder="08xx atau +62xx">
+            <span class="form-hint">Format: 08xx atau +62xx</span>
+            <span class="form-error" id="error-phone">
+              {{ contact_form.phone.errors.0 }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_subject">Subject</label>
+            <input type="text" name="subject" id="id_subject"
+                   class="form-input"
+                   value="{{ contact_form.subject.value|default:'' }}"
+                   placeholder="Topik pesan">
+            <span class="form-error" id="error-subject">
+              {{ contact_form.subject.errors.0 }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_message">Message</label>
+            <textarea name="message" id="id_message"
+                      class="form-input form-textarea"
+                      placeholder="Isi pesanmu di sini..."
+                      rows="5">{{ contact_form.message.value|default:'' }}</textarea>
+            <span class="form-error" id="error-message">
+              {{ contact_form.message.errors.0 }}
+            </span>
+          </div>
+
+          <button type="submit" class="btn-primary" id="contact-submit">
+            send_message <span>→</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/typewriter.js' %}" defer></script>
+<script src="{% static 'js/form-validation.js' %}" defer></script>
 {% endblock %}

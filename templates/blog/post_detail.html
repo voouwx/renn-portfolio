@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}renn_ — {{ post.title }}{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <a href="{% url 'blog:post_list' %}" class="back-link">&larr; Back to blog</a>
+
+    <h1 class="blog-detail__title">{{ post.title }}</h1>
+    <p class="blog-detail__meta">
+        <time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|date:'M d, Y' }}</time>
+        <span class="blog-detail__reading-time">{{ post.reading_time }} min read</span>
+    </p>
+
+    <article class="blog-detail__body">
+        {{ body_html|safe }}
+    </article>
+</section>
+{% endblock %}

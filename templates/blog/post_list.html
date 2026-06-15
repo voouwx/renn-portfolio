@@ -4,6 +4,27 @@
 
 {% block content %}
 <section class="page-section">
-    <h1>Blog</h1>
+    <h1 class="section-heading">blog<span class="section-heading__accent">_</span></h1>
+
+    {% if posts %}
+    <ul class="blog-list">
+        {% for post in posts %}
+        <li class="blog-list__item">
+            <h2 class="blog-list__title">
+                <a href="{% url 'blog:post_detail' slug=post.slug %}">{{ post.title }}</a>
+            </h2>
+            <p class="blog-list__meta">
+                <time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|date:'M d, Y' }}</time>
+                <span class="blog-list__reading-time">{{ post.reading_time }} min read</span>
+            </p>
+            {% if post.excerpt %}
+            <p class="blog-list__excerpt">{{ post.excerpt }}</p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty-state">No posts yet.</p>
+    {% endif %}
 </section>
 {% endblock %}

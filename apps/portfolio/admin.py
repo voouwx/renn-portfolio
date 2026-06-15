@@ -1,11 +1,18 @@
 from django.contrib import admin
 
-from .models import Project, Skill
+from .models import Experience, Project, Skill
+
+
+@admin.register(Experience)
+class ExperienceAdmin(admin.ModelAdmin):
+    list_display = ['role', 'company', 'period', 'is_current', 'order']
+    list_filter = ['is_current']
+    ordering = ['order']
 
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'order']
+    list_display = ['name', 'category', 'proficiency', 'order']
     list_filter = ['category']
     ordering = ['category', 'order']
 

@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Renn — Data Scientist. AI Security. Edge AI. MLOps.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Renn — Data Scientist specializing in AI Security, Edge AI/TinyML, and MLOps{% endblock %}">
+    <meta name="author" content="Renn">
+    <meta property="og:title" content="{% block og_title %}Renn Portfolio{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Renn — Data Scientist specializing in AI Security, Edge AI/TinyML, and MLOps{% endblock %}">
+    <meta name="theme-color" content="#0a0a0a">
     <title>{% block title %}renn_{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +17,22 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <div id="loading-screen" aria-hidden="true">
+        <div class="loading-content">
+            <pre class="loading-code"><code><span class="cb-keyword">const</span> <span class="cb-var">portfolio</span> = {
+  <span class="cb-key">loading</span> : <span class="cb-keyword">true</span>,
+  <span class="cb-key">status</span>  : <span class="cb-str">'initializing...'</span>
+} ;</code></pre>
+            <div class="loading-spinner"></div>
+            <div class="loading-bar-wrapper">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <p class="loading-percent" id="loading-percent">0%</p>
+        </div>
+    </div>
+
+    <div id="grid-bg" aria-hidden="true"></div>
+
     {% include 'components/navbar.html' %}
 
     <main class="main-content">
@@ -21,6 +41,9 @@
 
     {% include 'components/footer.html' %}
 
+    <button type="button" class="scroll-top" id="scroll-top" aria-label="Scroll to top" hidden>↑</button>
+
+    <script src="{% static 'js/main.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

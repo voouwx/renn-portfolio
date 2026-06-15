@@ -1,9 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}renn_ — Contact{% endblock %}
 
 {% block content %}
 <section class="page-section">
-    <h1>Contact</h1>
+    <h1 class="section-heading">contact<span class="section-heading__accent">_</span></h1>
+
+    {% if request.GET.sent == '1' %}
+    <p class="contact-success" role="status">Message sent successfully. I'll get back to you soon.</p>
+    {% endif %}
+
+    <form method="post" class="contact-form" id="contact-form" novalidate>
+        {% csrf_token %}
+
+        <div class="contact-form__field">
+            <label for="id_name" class="contact-form__label">Name</label>
+            {{ form.name }}
+            <span class="field-error" id="error-name" role="alert"></span>
+            {% if form.name.errors %}
+            <span class="field-error" role="alert">{{ form.name.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <div class="contact-form__field">
+            <label for="id_email" class="contact-form__label">Email</label>
+            {{ form.email }}
+            <span class="field-error" id="error-email" role="alert"></span>
+            {% if form.email.errors %}
+            <span class="field-error" role="alert">{{ form.email.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <div class="contact-form__field">
+            <label for="id_phone" class="contact-form__label">Phone <span class="contact-form__optional">(optional)</span></label>
+            {{ form.phone }}
+            {% if form.phone.help_text %}
+            <span class="contact-form__help">{{ form.phone.help_text }}</span>
+            {% endif %}
+            <span class="field-error" id="error-phone" role="alert"></span>
+            {% if form.phone.errors %}
+            <span class="field-error" role="alert">{{ form.phone.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <div class="contact-form__field">
+            <label for="id_subject" class="contact-form__label">Subject</label>
+            {{ form.subject }}
+            <span class="field-error" id="error-subject" role="alert"></span>
+            {% if form.subject.errors %}
+            <span class="field-error" role="alert">{{ form.subject.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <div class="contact-form__field">
+            <label for="id_message" class="contact-form__label">Message</label>
+            {{ form.message }}
+            <span class="char-counter" id="message-counter">0/20 karakter</span>
+            <span class="field-error" id="error-message" role="alert"></span>
+            {% if form.message.errors %}
+            <span class="field-error" role="alert">{{ form.message.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn--primary contact-form__submit" id="submit-btn">send_message</button>
+    </form>
+
+    <p class="contact-form__alt">
+        Or reach me on
+        <a href="https://github.com/voouwx" target="_blank" rel="noopener noreferrer">GitHub @voouwx</a>
+    </p>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/form-validation.js' %}" defer></script>
 {% endblock %}

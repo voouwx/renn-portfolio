@@ -5,11 +5,29 @@ from django.db.models import QuerySet
 from django.urls import reverse
 
 
+class Experience(models.Model):
+    """Work or internship experience for the portfolio homepage."""
+
+    role = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    period = models.CharField(max_length=50)
+    description = models.TextField()
+    is_current = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self) -> str:
+        return f'{self.role} at {self.company}'
+
+
 class Skill(models.Model):
     """Skill tag grouped by category for the portfolio homepage."""
 
     name = models.CharField(max_length=50)
     category = models.CharField(max_length=50)
+    proficiency = models.IntegerField(default=80)
     order = models.IntegerField(default=0)
 
     class Meta:
