@@ -1,0 +1,25 @@
+{% load static %}
+<div class="social-grid">
+  {% for link in social_links %}
+  <a href="{{ link.url }}"
+     class="social-card"
+     data-animate="scale-pop"
+     style="transition-delay: {{ forloop.counter0|add:0 }}00ms"
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="{{ link.name }} — {{ link.handle }}">
+    <span class="social-card__icon">
+      <img src="{% static link.icon %}"
+           alt=""
+           width="52"
+           height="52"
+           loading="lazy">
+    </span>
+    <span class="social-card__body">
+      <span class="social-card__name">{{ link.name }}</span>
+      <span class="social-card__handle">@{{ link.handle }}</span>
+    </span>
+    <span class="social-card__arrow" aria-hidden="true">↗</span>
+  </a>
+  {% endfor %}
+</div>

@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.portfolio',
     'apps.blog',
-    'apps.contact',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +49,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'config.context_processors.social_links',
             ],
         },
     },
@@ -98,11 +98,29 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # untuk development
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@portfolio.com')
-CONTACT_RECIPIENT_EMAIL = config('CONTACT_RECIPIENT_EMAIL', default='')
+SOCIAL_LINKS: list[dict[str, str]] = [
+    {
+        'name': 'GitHub',
+        'handle': config('SOCIAL_GITHUB_HANDLE', default='voouwx'),
+        'url': config('SOCIAL_GITHUB_URL', default='https://github.com/voouwx'),
+        'icon': 'images/social/github.svg',
+    },
+    {
+        'name': 'LinkedIn',
+        'handle': config('SOCIAL_LINKEDIN_HANDLE', default='voouwx'),
+        'url': config('SOCIAL_LINKEDIN_URL', default='https://linkedin.com/in/voouwx'),
+        'icon': 'images/social/linkedin.svg',
+    },
+    {
+        'name': 'Instagram',
+        'handle': config('SOCIAL_INSTAGRAM_HANDLE', default='voouwx'),
+        'url': config('SOCIAL_INSTAGRAM_URL', default='https://instagram.com/voouwx'),
+        'icon': 'images/social/instagram.svg',
+    },
+    {
+        'name': 'X',
+        'handle': config('SOCIAL_X_HANDLE', default='voouwx'),
+        'url': config('SOCIAL_X_URL', default='https://x.com/voouwx'),
+        'icon': 'images/social/x.svg',
+    },
+]

@@ -1,47 +1,38 @@
 """
-Production settings — PostgreSQL via DATABASE_URL, Railway deployment, security hardening.
+Production settings — PostgreSQL via DATABASE_URL, Render deployment, security hardening.
 """
 
-from urllib.parse import parse_qs, urlparse
+import os
 
+import dj_database_url
 from decouple import Csv, config
 
 from .base import *  # noqa: F403
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-database_url = config('DATABASE_URL')
-if database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://', 1)
-
-parsed = urlparse(database_url)
-query_params = parse_qs(parsed.query)
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parsed.path.lstrip('/'),
-        'USER': parsed.username,
-        'PASSWORD': parsed.password,
-        'HOST': parsed.hostname,
-        'PORT': parsed.port or 5432,
-        'OPTIONS': {
-            'sslmode': query_params.get('sslmode', ['require'])[0],
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL') or config('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=True,
+    ),
 }
 
 # Manifest storage raises 500 if collectstatic missed a file — too fragile for PaaS deploy
 STORAGES['staticfiles']['BACKEND'] = 'whitenoise.storage.CompressedStaticFilesStorage'  # noqa: F405
 
-# Railway injects RAILWAY_PUBLIC_DOMAIN when public networking is enabled
 ALLOWED_HOSTS = list(ALLOWED_HOSTS)
-railway_domain = config('RAILWAY_PUBLIC_DOMAIN', default='')
-if railway_domain:
-    ALLOWED_HOSTS.append(railway_domain)
 
-# Custom domain — set SITE_DOMAIN di dashboard (Render, Railway, dll.)
+# Render injects RENDER_EXTERNAL_HOSTNAME when public URL is enabled
+render_hostname = config('RENDER_EXTERNAL_HOSTNAME', default='')
+if render_hostname and render_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_hostname)
+
+# Custom domain — set SITE_DOMAIN in Render dashboard
 site_domain = config('SITE_DOMAIN', default='').strip().lower()
+domain_hosts: list[str] = []
 if site_domain:
     domain_hosts = [site_domain]
     if site_domain.startswith('www.'):
@@ -54,8 +45,8 @@ if site_domain:
             ALLOWED_HOSTS.append(host)
 
 csrf_origins = list(config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv()))
-if railway_domain:
-    csrf_origins.append(f'https://{railway_domain}')
+if render_hostname:
+    csrf_origins.append(f'https://{render_hostname}')
 if site_domain:
     for host in domain_hosts:
         origin = f'https://{host}'

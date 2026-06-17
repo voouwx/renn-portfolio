@@ -1,7 +1,0 @@
-# Cegah Nixpacks jalankan collectstatic saat build (env vars belum ada).
-# migrate + collectstatic ada di start.sh.
-[variables]
-DISABLE_COLLECTSTATIC = "1"
-
-[phases.build]
-cmds = []

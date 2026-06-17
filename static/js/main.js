@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initGlitchCounters();
     initSkillBars();
-    initFormRowAnimations();
     generateParticles();
 });
 
@@ -126,30 +125,6 @@ function initGlitchCounters() {
 
         requestAnimationFrame(frame);
     }
-}
-
-/**
- * Contact form row animations — repeated fade-in on scroll.
- */
-function initFormRowAnimations() {
-    const rows = document.querySelectorAll('.anim-form-row');
-    if (!rows.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            } else {
-                entry.target.classList.remove('visible');
-            }
-        });
-    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
-
-    rows.forEach((row) => {
-        const delay = parseInt(row.dataset.delay || '0', 10) * 100;
-        row.style.transitionDelay = `${delay}ms`;
-        observer.observe(row);
-    });
 }
 
 /**
