@@ -40,9 +40,27 @@ railway_domain = config('RAILWAY_PUBLIC_DOMAIN', default='')
 if railway_domain:
     ALLOWED_HOSTS.append(railway_domain)
 
+# Custom domain — set SITE_DOMAIN di dashboard (Render, Railway, dll.)
+site_domain = config('SITE_DOMAIN', default='').strip().lower()
+if site_domain:
+    domain_hosts = [site_domain]
+    if site_domain.startswith('www.'):
+        domain_hosts.append(site_domain.removeprefix('www.'))
+    else:
+        domain_hosts.append(f'www.{site_domain}')
+
+    for host in domain_hosts:
+        if host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(host)
+
 csrf_origins = list(config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv()))
 if railway_domain:
     csrf_origins.append(f'https://{railway_domain}')
+if site_domain:
+    for host in domain_hosts:
+        origin = f'https://{host}'
+        if origin not in csrf_origins:
+            csrf_origins.append(origin)
 CSRF_TRUSTED_ORIGINS = csrf_origins
 
 SECURE_BROWSER_XSS_FILTER = True

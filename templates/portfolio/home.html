@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}renn_ — Home{% endblock %}
+{% block title %}Renn - Portfolio{% endblock %}
 
 {% block content %}
 <section id="hero" class="hero-section">
   <div class="hero-content">
     <div class="hero-left">
+      <p class="hero-greeting">
+        <span class="hero-greeting-label">Hello, I'm</span>
+        <span class="hero-name">Renn</span>
+      </p>
       <h1 class="hero-title">
         <span class="code-keyword">const</span>
         <span class="code-equals"> = </span>
@@ -15,8 +19,7 @@
       </h1>
       <p class="hero-subtitle">
         <span class="code-comment">// </span>
-        <span class="hero-role-text"></span>
-        <span class="role-cursor">|</span>
+        <span class="hero-focus-typed"></span>
       </p>
       <p class="hero-desc">
         Background elektronika industri yang pivot ke Data Science —
@@ -34,37 +37,58 @@
 
     <div class="hero-right">
       <div class="orbit-container">
-        <div class="orbit-ring"></div>
-        <div class="orbit-center">
-          <span class="orbit-center-icon">&lt;/&gt;</span>
-        </div>
-        <div class="tech-card tech-card--apex">
-          <span class="tech-card-icon">🔥</span>
-          <div>
-            <p class="tech-card-name">PyTorch</p>
-            <p class="tech-card-sub">Deep Learning</p>
+        <div class="sun-aura"></div>
+
+        <div class="profile-orbit-wrapper" id="tilt-card">
+          <div class="profile-orbit-inner">
+            <img src="{% static 'images/profile.jpg' %}"
+                 alt="Renn"
+                 class="profile-orbit-img"
+                 width="220"
+                 height="220"
+                 loading="eager">
+            <div class="profile-orbit-glow"></div>
           </div>
         </div>
-        <div class="tech-card tech-card--bl">
-          <span class="tech-card-icon">🐍</span>
-          <div>
-            <p class="tech-card-name">Python</p>
-            <p class="tech-card-sub">scikit-learn, pandas</p>
-          </div>
+
+        <div class="planet planet-jupiter">
+          <svg viewBox="0 0 40 40" width="44" height="44" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="#c88b3a"/>
+            <ellipse cx="20" cy="15" rx="18" ry="3" fill="rgba(160,80,20,0.5)"/>
+            <ellipse cx="20" cy="21" rx="18" ry="2.5" fill="rgba(200,140,60,0.4)"/>
+            <ellipse cx="20" cy="26" rx="18" ry="2" fill="rgba(140,70,15,0.5)"/>
+            <circle cx="13" cy="21" r="4" fill="rgba(180,100,40,0.7)" stroke="rgba(220,160,80,0.3)" stroke-width="0.5"/>
+          </svg>
+          <span class="planet-label">Docker 🐋</span>
         </div>
-        <div class="tech-card tech-card--br">
-          <span class="tech-card-icon">🐧</span>
-          <div>
-            <p class="tech-card-name">Linux</p>
-            <p class="tech-card-sub">Pop!_OS, Terminal</p>
-          </div>
+
+        <div class="planet planet-earth">
+          <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="#1a6b8a"/>
+            <ellipse cx="15" cy="13" rx="7" ry="5" fill="#2d8a4e" opacity="0.9"/>
+            <ellipse cx="25" cy="22" rx="5" ry="6" fill="#2d8a4e" opacity="0.8"/>
+            <ellipse cx="12" cy="25" rx="4" ry="3" fill="#2d8a4e" opacity="0.7"/>
+            <ellipse cx="20" cy="7" rx="8" ry="2" fill="rgba(255,255,255,0.12)"/>
+          </svg>
+          <span class="planet-label">Python 🐍</span>
+        </div>
+
+        <div class="planet planet-saturn">
+          <svg viewBox="0 0 60 44" width="60" height="44" aria-hidden="true">
+            <ellipse cx="30" cy="26" rx="28" ry="6" fill="none" stroke="#9a7840" stroke-width="3" opacity="0.5"/>
+            <circle cx="30" cy="20" r="16" fill="#c8a876"/>
+            <ellipse cx="30" cy="17" rx="16" ry="3" fill="rgba(180,140,80,0.4)"/>
+            <ellipse cx="30" cy="22" rx="16" ry="2" fill="rgba(160,120,60,0.35)"/>
+            <ellipse cx="30" cy="26" rx="20" ry="4.5" fill="none" stroke="#c8a876" stroke-width="4" opacity="0.25"/>
+          </svg>
+          <span class="planet-label">Linux 🐧</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="about" class="about-section fade-in">
+<section id="about" class="about-section">
   <div class="section-container">
 
     <div class="section-heading">
@@ -77,7 +101,7 @@
     </div>
 
     <div class="about-grid">
-      <div class="about-left">
+      <div class="about-left" data-animate="blur">
         <p class="about-bio">
           Background di elektronika industri dari SMK — nyaman dengan
           circuit boards, microcontroller, dan sistem embedded sebelum
@@ -95,22 +119,25 @@
         </a>
 
         <div class="about-stats">
-          <div class="stat-card">
-            <span class="stat-number">3+</span>
+          <div class="stat-card" data-animate="blur">
+            <span class="stat-number glitch-counter"
+                  data-target="3" data-suffix="+">0</span>
             <span class="stat-label">Projects</span>
           </div>
-          <div class="stat-card">
-            <span class="stat-number">2</span>
+          <div class="stat-card" data-animate="blur" style="transition-delay: 0.1s">
+            <span class="stat-number glitch-counter"
+                  data-target="2" data-suffix="">0</span>
             <span class="stat-label">Years Learning</span>
           </div>
-          <div class="stat-card">
-            <span class="stat-number">6</span>
+          <div class="stat-card" data-animate="blur" style="transition-delay: 0.2s">
+            <span class="stat-number glitch-counter"
+                  data-target="6" data-suffix="">0</span>
             <span class="stat-label">Tech Domains</span>
           </div>
         </div>
       </div>
 
-      <div class="about-right">
+      <div class="about-right" data-animate="blur" style="transition-delay: 0.15s">
         <div class="code-block">
           <div class="code-block-header">
             <span class="code-dot red"></span>
@@ -145,13 +172,15 @@
 
     <div class="skills-grid">
       {% for category, skill_list in skills_grouped.items %}
-      <div class="skill-category-card fade-in">
+      <div class="skill-category-card" data-animate="slide-up"
+           style="transition-delay: {{ forloop.counter0|add:0 }}00ms">
         <h3 class="skill-category-title">{{ category }}</h3>
         {% for skill in skill_list %}
         <div class="skill-item">
           <div class="skill-item-header">
             <span class="skill-name">{{ skill.name }}</span>
-            <span class="skill-percent">{{ skill.proficiency }}%</span>
+            <span class="skill-percent"
+                  data-target="{{ skill.proficiency }}">0%</span>
           </div>
           <div class="skill-bar-track">
             <div class="skill-bar-fill"
@@ -177,9 +206,10 @@
       <div class="section-line"></div>
     </div>
 
-    <div class="timeline">
+    <div class="timeline" data-animate="fade-stagger">
       {% for exp in experiences %}
-      <div class="timeline-item fade-in">
+      <div class="timeline-item" data-animate="fade-stagger"
+           style="transition-delay: {{ forloop.counter0|add:0 }}00ms">
         <div class="timeline-dot {% if exp.is_current %}active{% endif %}"></div>
         <div class="timeline-card">
           <div class="timeline-header">
@@ -210,7 +240,8 @@
 
     <div class="projects-grid">
       {% for project in projects %}
-      <div class="project-card fade-in">
+      <div class="project-card" data-animate="scale-pop"
+           style="transition-delay: {{ forloop.counter0|add:0 }}00ms">
         <div class="project-card-header">
           <span class="project-icon">&lt;/&gt;</span>
           <div class="project-links">
@@ -260,7 +291,8 @@
     <div class="blog-list">
       {% for post in blog_posts %}
       <a href="{% url 'blog:post_detail' post.slug %}"
-         class="blog-item fade-in">
+         class="blog-item" data-animate="scale-pop"
+         style="transition-delay: {{ forloop.counter0|add:0 }}00ms">
         <div class="blog-item-meta">
           <span class="blog-date">{{ post.created_at|date:"M d, Y" }}</span>
           <span class="blog-read">{{ post.reading_time }} min read</span>
@@ -290,7 +322,7 @@
     </div>
 
     <div class="contact-grid">
-      <div class="contact-left">
+      <div class="contact-left" data-animate="fade-left">
         <p class="contact-desc">
           Tertarik untuk berkolaborasi atau sekadar diskusi?
           Kirim pesan — aku akan balas sesegera mungkin.
@@ -305,7 +337,7 @@
         </div>
       </div>
 
-      <div class="contact-right">
+      <div class="contact-right" data-animate="fade-right">
         {% if request.GET.sent %}
         <div class="success-message">
           ✓ Pesan terkirim! Aku akan segera membalasnya.
@@ -317,7 +349,7 @@
           {% csrf_token %}
           <input type="hidden" name="contact_submit" value="1">
 
-          <div class="form-group">
+          <div class="form-group anim-form-row" data-delay="0">
             <label class="form-label" for="id_name">Name</label>
             <input type="text" name="name" id="id_name"
                    class="form-input"
@@ -328,7 +360,7 @@
             </span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group anim-form-row" data-delay="1">
             <label class="form-label" for="id_email">Email</label>
             <input type="email" name="email" id="id_email"
                    class="form-input"
@@ -339,7 +371,7 @@
             </span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group anim-form-row" data-delay="2">
             <label class="form-label" for="id_phone">
               Phone <span class="form-optional">(optional)</span>
             </label>
@@ -353,7 +385,7 @@
             </span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group anim-form-row" data-delay="3">
             <label class="form-label" for="id_subject">Subject</label>
             <input type="text" name="subject" id="id_subject"
                    class="form-input"
@@ -364,7 +396,7 @@
             </span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group anim-form-row" data-delay="4">
             <label class="form-label" for="id_message">Message</label>
             <textarea name="message" id="id_message"
                       class="form-input form-textarea"
@@ -375,7 +407,7 @@
             </span>
           </div>
 
-          <button type="submit" class="btn-primary" id="contact-submit">
+          <button type="submit" class="btn-primary anim-form-row" id="contact-submit" data-delay="5">
             send_message <span>→</span>
           </button>
         </form>
@@ -386,6 +418,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/typewriter.js' %}" defer></script>
+<script src="{% static 'js/vendor/typed.umd.js' %}" defer></script>
+<script src="{% static 'js/hero-init.js' %}" defer></script>
 <script src="{% static 'js/form-validation.js' %}" defer></script>
 {% endblock %}

@@ -1,14 +1,101 @@
-<header class="navbar">
-    <div class="navbar__inner">
-        <a href="{% url 'portfolio:home' %}" class="nav-logo">&lt; Dev /&gt;</a>
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="{% url 'portfolio:home' %}#hero" class="nav-link" data-section="hero">Home</a>
-            <a href="{% url 'portfolio:home' %}#about" class="nav-link" data-section="about">About</a>
-            <a href="{% url 'portfolio:home' %}#skills" class="nav-link" data-section="skills">Skills</a>
-            <a href="{% url 'portfolio:home' %}#experience" class="nav-link" data-section="experience">Experience</a>
-            <a href="{% url 'portfolio:home' %}#projects" class="nav-link" data-section="projects">Projects</a>
-            <a href="{% url 'portfolio:home' %}#blog" class="nav-link" data-section="blog">Blog</a>
-            <a href="{% url 'portfolio:home' %}#contact" class="nav-link" data-section="contact">Contact</a>
-        </nav>
-    </div>
-</header>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <!-- Logo -->
+    <a href="{% url 'portfolio:home' %}" class="nav-logo">
+      <span class="logo-bracket">&lt;</span>
+      <span class="logo-main">Voyager</span>
+      <span class="logo-accent"> Dev</span>
+      <span class="logo-bracket"> /&gt;</span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="nav-links" id="nav-links">
+      <li>
+        <a href="{% url 'portfolio:home' %}#hero" class="nav-link" data-section="hero">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#about" class="nav-link" data-section="about">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          About
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#skills" class="nav-link" data-section="skills">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <polyline points="16,18 22,12 16,6"/>
+            <polyline points="8,6 2,12 8,18"/>
+          </svg>
+          Skills
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#experience" class="nav-link" data-section="experience">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+          </svg>
+          Experience
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#projects" class="nav-link" data-section="projects">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <polygon points="12,2 2,7 12,22 22,7"/>
+          </svg>
+          Projects
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#blog" class="nav-link" data-section="blog">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+          </svg>
+          Blog
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'portfolio:home' %}#contact" class="nav-link" data-section="contact">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Contact
+        </a>
+      </li>
+    </ul>
+
+    <!-- Hamburger button (mobile) -->
+    <button class="hamburger" id="hamburger"
+            aria-label="Toggle menu" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+  </div>
+</nav>

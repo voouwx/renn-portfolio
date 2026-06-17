@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <style>
+      @keyframes glow-pulse {
+        0%, 100% {
+          filter: drop-shadow(0 0 2px #00e5ff)
+                  drop-shadow(0 0 4px #00e5ff);
+          opacity: 1;
+        }
+        50% {
+          filter: drop-shadow(0 0 6px #00e5ff)
+                  drop-shadow(0 0 12px #00e5ff)
+                  drop-shadow(0 0 20px rgba(0,229,255,0.5));
+          opacity: 0.88;
+        }
+      }
+      @keyframes bracket-flicker {
+        0%, 88%, 100% { opacity: 1; }
+        92% { opacity: 0.3; }
+        96% { opacity: 1; }
+        98% { opacity: 0.5; }
+      }
+      .favicon-all {
+        animation: glow-pulse 2.5s ease-in-out infinite;
+      }
+      .bracket-left {
+        animation: bracket-flicker 4s ease-in-out infinite;
+      }
+      .bracket-right {
+        animation: bracket-flicker 4s ease-in-out infinite 0.2s;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100" height="100" rx="12" fill="#0a0a0a"/>
+
+  <!-- Semua teks dalam satu group untuk glow-pulse -->
+  <g class="favicon-all">
+    <!-- < bracket kiri -->
+    <text
+      class="bracket-left"
+      x="8"
+      y="68"
+      font-family="'JetBrains Mono', 'Fira Code', monospace"
+      font-weight="700"
+      font-size="36"
+      fill="#00e5ff"
+    >&lt;</text>
+
+    <!-- R -->
+    <text
+      x="34"
+      y="68"
+      font-family="'JetBrains Mono', 'Fira Code', monospace"
+      font-weight="700"
+      font-size="36"
+      fill="#00e5ff"
+    >R</text>
+
+    <!-- / slash -->
+    <text
+      x="58"
+      y="65"
+      font-family="'JetBrains Mono', 'Fira Code', monospace"
+      font-weight="400"
+      font-size="28"
+      fill="rgba(0,229,255,0.6)"
+    >/</text>
+
+    <!-- > bracket kanan -->
+    <text
+      class="bracket-right"
+      x="72"
+      y="68"
+      font-family="'JetBrains Mono', 'Fira Code', monospace"
+      font-weight="700"
+      font-size="36"
+      fill="#00e5ff"
+    >&gt;</text>
+  </g>
+</svg>

@@ -29,3 +29,7 @@ staticfiles/
 Thumbs.db
 .cursorrules
 PROJECT_BRIEF.md
+
+# Dokumen lokal — tidak di-upload ke GitHub
+DEPLOY.md
+RINGKASAN_PERUBAHAN.md

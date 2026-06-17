@@ -8,8 +8,9 @@
     <meta name="author" content="Renn">
     <meta property="og:title" content="{% block og_title %}Renn Portfolio{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Renn — Data Scientist specializing in AI Security, Edge AI/TinyML, and MLOps{% endblock %}">
-    <meta name="theme-color" content="#0a0a0a">
-    <title>{% block title %}renn_{% endblock %}</title>
+    <meta name="theme-color" content="#0b0d14">
+    <title>{% block title %}Renn - Portfolio{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -31,6 +32,7 @@
         </div>
     </div>
 
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div id="grid-bg" aria-hidden="true"></div>
 
     {% include 'components/navbar.html' %}
@@ -43,6 +45,7 @@
 
     <button type="button" class="scroll-top" id="scroll-top" aria-label="Scroll to top" hidden>↑</button>
 
+    <script src="{% static 'js/hero-bg.js' %}" defer></script>
     <script src="{% static 'js/main.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
 </body>
