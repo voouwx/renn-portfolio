@@ -1,12 +1,10 @@
 """
-Local development settings — SQLite, DEBUG enabled.
+Local development settings — SQLite, DEBUG always on, simple static files.
 """
-
-from decouple import config
 
 from .base import *  # noqa: F403
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = True
 
 DATABASES = {
     'default': {
@@ -14,3 +12,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',  # noqa: F405
     }
 }
+
+# Manifest storage needs collectstatic — skip for local dev
+STORAGES['staticfiles']['BACKEND'] = (  # noqa: F405
+    'django.contrib.staticfiles.storage.StaticFilesStorage'
+)
